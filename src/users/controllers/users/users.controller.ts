@@ -11,38 +11,25 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDTO } from 'src/users/dto/createUser.dto';
+import { UsersService } from 'src/users/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
-  @Get('')
-  // ths will convert the query parameter 'page' to an integer
+  constructor(private usersService: UsersService) {}
+
+  @Get()
   getUsers(@Query('page', ParseIntPipe) page: number) {
-    console.log('sort', page , typeof page);
-    return [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'email1@gmail.com',
-      },
-    ];
+    return this.usersService.getUsers(page);
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
-  createUser(@Body() body: CreateUserDTO) {
-    return {
-      id: Date.now(),
-      ...body,
-      createdAt: new Date().toISOString(),
-    };
+  createUser(@Body() createUserDto: CreateUserDTO) {
+    return this.usersService.createUser(createUserDto);
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string) {
-    return {
-      id: parseInt(id),
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-    };
+  getUserById(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.getUserById(id);
   }
 }
