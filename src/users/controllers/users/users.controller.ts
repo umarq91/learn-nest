@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -14,8 +15,9 @@ import { CreateUserDTO } from 'src/users/dto/createUser.dto';
 @Controller('users')
 export class UsersController {
   @Get('')
-  getUsers(@Query('sort') sort: string) {
-    console.log('sort', sort);
+  // ths will convert the query parameter 'page' to an integer
+  getUsers(@Query('page', ParseIntPipe) page: number) {
+    console.log('sort', page , typeof page);
     return [
       {
         id: 1,
